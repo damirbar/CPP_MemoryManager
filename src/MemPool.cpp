@@ -6,7 +6,7 @@
 #include "../hdr/MemPool.h"
 
 MemPool::MemPool() : _pool(nullptr) {
-    std::cout << "MemPool ctor called" << std::endl;
+//    std::cout << "MemPool ctor called" << std::endl;
 }
 
 void MemPool::setPool(size_t size) {
@@ -14,9 +14,9 @@ void MemPool::setPool(size_t size) {
         size_t next = (size_t )pow(2, ceil(log(size)/log(2)));
 //        _pool = new char[next];
         _pool = (char*)malloc(sizeof(char) * next);
-        std::cout << "A pool of " << next << " bytes was set at address ";
-        printf("%p", _pool);
-        std::cout << std::endl;
+//        std::cout << "A pool of " << next << " bytes was set at address ";
+//        printf("%p", _pool);
+//        std::cout << std::endl;
     }
     else {
         std::cerr << "Can't set the pool twice!" << std::endl;
@@ -24,12 +24,12 @@ void MemPool::setPool(size_t size) {
 }
 
 MemPool::~MemPool() {
-    std::cout << "MemPool dtor called" << std::endl;
+//    std::cout << "MemPool dtor called" << std::endl;
     if (_pool) {
-        delete[] _pool;
-//        free(_pool);
+//        delete[] _pool;
+        free(_pool);
         _pool = nullptr;
-        std::cout << "Pool deleted" << std::endl;
+//        std::cout << "Pool deleted" << std::endl;
     }
 }
 

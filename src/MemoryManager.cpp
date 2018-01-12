@@ -8,14 +8,16 @@
 
 MemoryManager::MemoryManager(size_t size, bool valgrind)
         : /*map(new FreeList[11]), allocated(new FreeList[11]),*/ _mmpl(MemPool::getInstance()),
-          _poolSize((size_t) pow(2, ceil(log(size) / log(2)))), _currAlloc(0), valgrindFlag(valgrind), readyToGo(true) {
+                                                                  _poolSize((size_t) pow(2, ceil(log(size) / log(2)))),
+                                                                  _currAlloc(0), valgrindFlag(valgrind),
+                                                                  _readyToGo(true) {
 
-    void *mapMem = (FreeList*)malloc(sizeof(FreeList)*11);
+    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * 11);
     if (!mapMem) {
         std::cerr << "FreeList map was not created" << std::endl;
         return;
     }
-    void *allocatedMem = (FreeList*)malloc(sizeof(FreeList)*11);
+    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * 11);
     if (!allocatedMem) {
         std::cerr << "FreeList allocated was not created" << std::endl;
     }
@@ -28,11 +30,11 @@ MemoryManager::MemoryManager(size_t size, bool valgrind)
 }
 
 MemoryManager::MemoryManager()
-        : _mmpl(MemPool::getInstance()), readyToGo(false) {}
+        : _mmpl(MemPool::getInstance()), _readyToGo(false) {}
 
 
 void MemoryManager::setSize(size_t size) {
-    if(readyToGo) {
+    if (_readyToGo) {
         std::cout << "Can't set the manager's size more than once!" << std::endl;
     }
 
@@ -40,12 +42,12 @@ void MemoryManager::setSize(size_t size) {
     _currAlloc = 0;
     valgrindFlag = false;
 
-    void *mapMem = (FreeList*)malloc(sizeof(FreeList)*11);
+    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * 11);
     if (!mapMem) {
         std::cerr << "FreeList map was not created" << std::endl;
         return;
     }
-    void *allocatedMem = (FreeList*)malloc(sizeof(FreeList)*11);
+    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * 11);
     if (!allocatedMem) {
         std::cerr << "FreeList allocated was not created" << std::endl;
     }
@@ -55,7 +57,7 @@ void MemoryManager::setSize(size_t size) {
 
     _mmpl.setPool(size);
     init();
-    readyToGo = true;
+    _readyToGo = true;
 }
 
 void MemoryManager::setValgrind(bool is) {
@@ -294,6 +296,8 @@ MemoryManager::~MemoryManager() {
         if (bytesForgotten > 0) {
             std::cout << "\t\t\t\tTotal: lost " << bytesForgotten << " bytes in " << placesForgotten << " places"
                       << std::endl;
+        } else {
+            std::cout << "No memory leaks at all" << std::endl;
         }
     }
 
@@ -310,8 +314,9 @@ void MemoryManager::printCurrMemoryState() {
     for (int i = 0; i < 11; ++i) {
 
         FreeNode *it = map[i].getHead();
-        std::cout << "This list has " << map[i].pairs() << " pairs" << std::endl;
+
         if (it) {
+//            std::cout << "This list has " << map[i].pairs() << " pairs" << std::endl;
             std::cout << "Showing state for blocks of size " << pow(2, i) << ":" << std::endl;
             while (it != map[i].tail) {
                 std::cout << *it << " <-- ";
@@ -377,8 +382,8 @@ void MemoryManager::printCurrAllocatedMemoryState() {
 
 char *MemoryManager::getMemoryBlock(size_t size) {
 
-    std::cout << "Got a memory request of size " << size << ", but will return memory of size "
-              << (int) pow(2, ceil(log(size) / log(2))) << std::endl;
+//    std::cout << "Got a memory request of size " << size << ", but will return memory of size "
+//              << (int) pow(2, ceil(log(size) / log(2))) << std::endl;
 
     FreeNode *ret = nullptr;
 
@@ -405,7 +410,23 @@ char *MemoryManager::getMemoryBlock(size_t size) {
 //            nextPow /= 2;
 
             while (counters[i] * pow(2, i) > _poolSize - (!wasAllocated ? _currAlloc + size : _currAlloc)) {
-                std::cout << "Popping a block of size " << pow(2, i) << std::endl;
+//                std::cout << "Popping a block of size " << pow(2, i) << std::endl;
+
+
+//                if (counters[i] * pow(2, i) == _poolSize - (!wasAllocated ? _currAlloc + size : _currAlloc)) {
+//
+//                    if (i == check) {
+//                        ret = map[i].allocNode();
+//                        allocated[i].addNode(ret);
+//
+//                        if (!wasAllocated) {
+//                            _currAlloc += size;
+//                            wasAllocated = true;
+//                        }
+//                    }
+//                    break;
+//                }
+
                 if (i == check) {
                     ret = map[i].allocNode();
                     allocated[i].addNode(ret);
@@ -414,7 +435,6 @@ char *MemoryManager::getMemoryBlock(size_t size) {
                         _currAlloc += size;
                         wasAllocated = true;
                     }
-
 //                    allocated[i].add(ret);
                 } else {
 //                    delete map[i].allocNode();
@@ -436,7 +456,7 @@ char *MemoryManager::getMemoryBlock(size_t size) {
             std::cout << "Returning a nullptr. Not enough memory" << std::endl;
             return nullptr;
         } else {
-            std::cout << "Returning a block of size " << (int) pow(2, check) << std::endl;
+//            std::cout << "Returning a block of size " << (int) pow(2, check) << std::endl;
             return ret->getBlock();
         }
     }
@@ -444,7 +464,6 @@ char *MemoryManager::getMemoryBlock(size_t size) {
     return nullptr;
 
 }
-
 
 
 void MemoryManager::returnMemoryBlock(char *f, size_t size) {
@@ -455,7 +474,7 @@ void MemoryManager::returnMemoryBlock(char *f, size_t size) {
         return;
     }
 
-    std::cout << "Attempting to return a memory of size " << size << std::endl;
+//    std::cout << "Attempting to return a memory of size " << size << std::endl;
     int check = whichPowerOfTwo(size);
 
     if (check == -1) {
@@ -475,24 +494,25 @@ void MemoryManager::returnMemoryBlock(char *f, size_t size) {
 
                 while ((counters[i] * pow(2, i)) + pow(2, i) <= _poolSize - _currAlloc) {
                     char *filler;
-                    std::cout << "Adding a block of size " << pow(2, i) << std::endl;
+//                    std::cout << "Adding a block of size " << pow(2, i) << std::endl;
                     if (counter > size) {
 
                         if (map[i - 1].pairs() > map[i].size()) {
-                            FreeNode* n = map[i-1].getHead();
+                            FreeNode *n = map[i - 1].getHead();
                             map[i].remove();
-                            while(n && n->next){
-                                if(n->next->getBlock()-n->getBlock() == pow(2,i-1)){
+                            while (n && n->next) {
+                                if (n->next->getBlock() - n->getBlock() == pow(2, i - 1)) {
                                     void *memToAlloc = (FreeNode *) malloc(sizeof(FreeNode));
                                     if (!memToAlloc) {
                                         std::cerr << "Couldn't allocate memory for block of size " << size << std::endl;
                                         return;
                                     }
                                     map[i].add(new(memToAlloc) FreeNode(n->getBlock(), counter));
-                                    n=n->next;
+                                    n = n->next;
                                 }
-                                n=n->next;
+                                n = n->next;
                             }
+                            counters[i] = map[i].size();
                             break;
                         } else {
                             filler = nullptr;
@@ -533,10 +553,14 @@ void MemoryManager::searchSizeAndReturnMemory(char *block) {
     for (int i = 0; i < 11; ++i) {
         int size = allocated[i].searchBlockSize(block);
         if (size != -1) {
-            std::cout << "\t\t\t\t\t\t\t\t\t\t\t\tThe node removed is of size " << size << std::endl;
-            returnMemoryBlock(block, (size_t)size);
+//            std::cout << "\t\t\t\t\t\t\t\t\t\t\t\tThe node removed is of size " << size << std::endl;
+            returnMemoryBlock(block, (size_t) size);
         }
     }
+}
+
+bool MemoryManager::isReady() {
+    return _readyToGo;
 }
 
 

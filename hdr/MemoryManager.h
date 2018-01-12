@@ -25,7 +25,7 @@ class MemoryManager {
 
     int counters[11];
 
-    bool readyToGo;
+    bool _readyToGo;
 
 public:
 
@@ -36,6 +36,8 @@ public:
     void setSize(size_t size);
 
     void setValgrind(bool is);
+
+    bool isReady();
 
     ~MemoryManager();
 

@@ -348,7 +348,7 @@ char *FreeList::removeNodeOfBlock(char *block) {
         return nullptr;
     }
     if (node->getBlock() == block) {
-        std::cout << "Removed the head node with id = " << node->_id << std::endl;
+//        std::cout << "Removed the head node with id = " << node->_id << std::endl;
         FreeNode *node = head;
         head = head->next;
 //        node = node->next;
@@ -365,7 +365,7 @@ char *FreeList::removeNodeOfBlock(char *block) {
         node = node->next;
     }
     if (node->getBlock() == block) {
-        std::cout << "Removed the node with id = " << node->_id << std::endl;
+//        std::cout << "Removed the node with id = " << node->_id << std::endl;
         node->prev->next = node->next;
         if (node->next != nullptr) {
             node->next->prev = node->prev;
