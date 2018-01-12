@@ -58,6 +58,8 @@ public:
     char* removeNodeOfBlock(char *block);
 
     void addBlock(char *block, size_t size);
+
+    int searchBlockSize(char *block);
 };
 
 

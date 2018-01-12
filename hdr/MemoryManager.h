@@ -25,20 +25,29 @@ class MemoryManager {
 
     int counters[11];
 
+    bool readyToGo;
 
 public:
 
     explicit MemoryManager(size_t size, bool valgrind=false);
 
+    MemoryManager();
+
+    void setSize(size_t size);
+
+    void setValgrind(bool is);
+
     ~MemoryManager();
 
-    FreeNode *getMemory(size_t size);
+//    FreeNode *getMemory(size_t size);
 
     char *getMemoryBlock(size_t size);
 
-    void returnMemory(FreeNode *f);
+//    void returnMemory(FreeNode *f);
 
     void returnMemoryBlock(char *f, size_t size);
+
+    void searchSizeAndReturnMemory(char *block);
 
     void printCurrMemoryState();
 

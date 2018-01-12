@@ -23,6 +23,7 @@ FreeList::~FreeList() {
 //            delete curr;
         }
         tail = nullptr;
+        head = nullptr;
 //        head->~FreeNode();
         free(head);
 //        delete head;
@@ -451,4 +452,24 @@ void FreeList::addBlock(char *block, size_t size) {
 
     }
     ++_size;
+}
+
+
+
+int FreeList::searchBlockSize(char *block) {
+    char *ret = nullptr;
+    FreeNode *node = head;
+    if (!head) {
+        return -1;
+    }
+
+    while (node->getBlock() != block && node->next) {
+        node = node->next;
+    }
+    if (node->getBlock() == block) {
+        return node->getBlockSize();
+    }
+    else {
+        return -1;
+    }
 }
