@@ -60,33 +60,28 @@ int main(int argc, char *argv[]) {
     if (argc == 3) {
         char *argOne = argv[1];
 //        string argOneString = argOne;
-        if ((string)argOne == "-s") {
+        if ((string) argOne == "-s") {
             size = static_cast<size_t>(stoll((string) argv[2]));
-        }
-        else {
+        } else {
             cerr << "Wrong arguments" << endl;
             return 1;
         }
-    }
-    else if (argc == 4) {
+    } else if (argc == 4) {
         if ((string) argv[1] == "-valgrind") {
             valgrind = true;
 
             if ((string) argv[2] == "-s") {
                 size = static_cast<size_t>(stoll((string) argv[3]));
-            }
-            else {
+            } else {
                 cerr << "Wrong arguments" << endl;
                 return 1;
             }
-        }
-        else if ((string) argv[3] == "-valgrind") {
+        } else if ((string) argv[3] == "-valgrind") {
             valgrind = true;
 
             if ((string) argv[1] == "-s") {
                 size = static_cast<size_t>(stoll((string) argv[2]));
-            }
-            else {
+            } else {
                 cerr << "Wrong arguments" << endl;
                 return 1;
             }
@@ -124,7 +119,7 @@ int main(int argc, char *argv[]) {
     /*  Printing the address of the double, which will correspond to the missing
      *  bytes on the manager's heap, and the value of the double.
      */
-    cout << "d = " << static_cast<void*>(d) << " and *d = " << *d << endl;
+    cout << "d = " << static_cast<void *>(d) << " and *d = " << *d << endl;
 
     /*  Deleting the pointer by using the overloaded global delete operator.
      *  The memory will be returned to the custom memory manager.
@@ -151,7 +146,7 @@ int main(int argc, char *argv[]) {
     ints[3] = 1;
 
     for (int i = 0; i < 4; ++i) {
-        cout << "The address is " << static_cast<void*>(ints + i) << " and ints[" << i << "] = " << ints[i] << endl;
+        cout << "The address is " << static_cast<void *>(ints + i) << " and ints[" << i << "] = " << ints[i] << endl;
     }
 
 

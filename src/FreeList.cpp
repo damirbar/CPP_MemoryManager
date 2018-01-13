@@ -3,9 +3,6 @@
 //
 
 #include "../hdr/FreeList.h"
-
-
-#include <iostream>
 #include <cmath>
 
 
@@ -20,13 +17,10 @@ FreeList::~FreeList() {
             head = head->next;
             curr->~FreeNode();
             free(curr);
-//            delete curr;
         }
         tail = nullptr;
         head = nullptr;
-//        head->~FreeNode();
         free(head);
-//        delete head;
     }
 }
 
@@ -34,30 +28,14 @@ size_t FreeList::size() const {
     return _size;
 }
 
-//  Like LinkedList's remove
+//  Like LinkedList's clear
 char *FreeList::alloc() {
-//    FreeNode *it = head;
-
     if (!head) {
         return nullptr;
     }
     FreeNode *ret = head;
 
     head = head->next;
-//    char *blockRet = ret->getBlock();
-//    delete ret;
-
-//    return ret->getBlock();
-
-//    while (it && !it->_free) {
-//        it = it->next;
-//    }
-//    if (it) {
-//        it->_free = false;
-//        it->prev->next = it->next;
-//        it->next->prev = it->prev;
-//        return it->getBlock();
-//    }
     return ret->getBlock();
 }
 
@@ -78,9 +56,6 @@ void FreeList::add(FreeNode *f) {
         }
     } else {
         FreeNode *tmp = head;
-//        while ((tmp != tail) && f->getBlock() > tmp->getBlock()) {
-//            tmp = tmp->next;
-//        }
         if (tmp->next == head) {
             if (head->getBlock() > f->getBlock()) {
                 head->prev = f;
@@ -114,27 +89,13 @@ void FreeList::add(FreeNode *f) {
                 f->next = head;
                 head = f;
             } else {
-//            if (tmp->next) {
                 f->prev = tmp->prev;
                 f->next = tmp;
                 tmp->prev = f;
                 f->prev->next = f;
             }
-//            }
-//            else{
-//                tail->next=f;
-//                tail=f;
-//            }
-//            f->prev = tmp;
-
         }
-//        f->next = head;
-//        head = f;
-//        tail->next = f;
-//        tail = f;
     }
-
-    //updatePairs();
     ++_size;
 }
 
@@ -142,7 +103,6 @@ FreeNode *FreeList::allocNode() {
     if (!head) {
         return nullptr;
     }
-
     FreeNode *ret = head;
 
     if (_size == 1) {
@@ -151,7 +111,6 @@ FreeNode *FreeList::allocNode() {
         head = head->next;
     }
 
-    //updatePairs();
     --_size;
     return ret;
 }
@@ -169,7 +128,6 @@ FreeNode *FreeList::removeNode(FreeNode *f) {
         std::cout << "Removed the head node with id = " << node->_id << std::endl;
         FreeNode *node = head;
         head = head->next;
-//        node = node->next;
         node->next = node->prev = nullptr;
         --_size;
         return node;
@@ -188,11 +146,9 @@ FreeNode *FreeList::removeNode(FreeNode *f) {
         --_size;
         return node;
     }
-    //  updatePairs();
 }
 
 void FreeList::addNode(FreeNode *f) {
-//    FreeNode *substitutor = new FreeNode(f->getBlock(), f->getBlockSize());
     f->next = f->prev = nullptr;
     FreeNode *substitutor = f;
     if (!head) {
@@ -201,10 +157,7 @@ void FreeList::addNode(FreeNode *f) {
         head->prev = substitutor;
         substitutor->next = head;
         head = substitutor;
-//        tail->next = substitutor;
-//        tail = substitutor;
     }
-    //   updatePairs();
     ++_size;
 }
 
@@ -217,10 +170,6 @@ void FreeList::updatePairs() {
     _numOfPairs = 0;
     FreeNode *node = head;
     while (node != tail && node->next) {
-//        printf("node next block=%p node block=%p\n",node->next->getBlock(),node->getBlock());
-//        //std::cout<<"node next block="<<node->next->getBlock()<<"node block="<< node->getBlock()<<std::endl;
-//        std::cout<<"Diff="<<node->next->getBlock() - node->getBlock()<<std::endl;
-
         if (node->next->getBlock() - node->getBlock() == node->getBlockSize()) {
             _numOfPairs++;
 
@@ -252,88 +201,16 @@ char *FreeList::getPairAt(char *block) {
 }
 
 
-//bool
-//FreeList::getPairAt(char *block, FreeList *map, int i, size_t counter, FreeNode *f, size_t size,
-//                    FreeList *allocated, bool test) {
-////    map[i].remove();
-//    FreeNode *node = head;
-//    while (node && node->next) {
-//        if (node->next->getBlock() - block == node->getBlockSize() && !map[i].contains(block)) {
-//            if (test) {
-//                map[i].add(new FreeNode(block, counter));
-//
-//
-//            } else if (pow(2, i) == size) {
-//                test = true;
-//                FreeList &list = allocated[whichPowerOfTwo(f->getBlockSize())];
-//                map[whichPowerOfTwo(f->getBlockSize())].add(list.removeNode(f));
-//            } else {
-//                map[i].add(new FreeNode(block, counter));
-//            }
-//            node = node->next;
-//        }
-//        node = node->next;
-//    }
-//    FreeNode *node2 = map[i + 1].getHead();
-//    map[i + 1].remove();
-//    FreeNode *n = head;
-//    while (n && n->next) {
-//        if (n->next->getBlock() - n->getBlock() == counter) {
-//            if (test) {
-//                map[i + 1].add(new FreeNode(n->getBlock(), counter*2 ));
-//            } else if (pow(2, i + 1) == size) {
-//                test = true;
-//                FreeList &list = allocated[whichPowerOfTwo(f->getBlockSize())];
-//                map[whichPowerOfTwo(f->getBlockSize())].add(list.removeNode(f));
-//            } else {
-//                map[i + 1].add(new FreeNode(block, counter));
-//            }
-//            n = n->next;
-//        }
-//        n = n->next;
-//    }
-//    return test;
-//}
-//
-//int FreeList::whichPowerOfTwo(size_t n) {
-//    int counter = 0;
-//
-//    while (n % 2 == 0) {
-//        counter++;
-//        if (counter > 10)
-//            break;
-//        n /= 2;
-//    }
-//    if (n != 1 && n % 2 != 0) {
-//        return -1;
-//    }
-//    return counter;
-//}
-//
-//
-//bool FreeList::contains(char *block) {
-//    FreeNode *node = head;
-//    while (node) {
-//        if (node->getBlock() == block) {
-//            return true;
-//        }
-//        node = node->next;
-//    }
-//    return false;
-//}
-//
-void FreeList::remove() {
+void FreeList::clear() {
     if (head) {
         while (head != tail) {
             FreeNode *curr = head;
             head = head->next;
             curr->~FreeNode();
             free(curr);
-//            delete curr;
         }
         head->~FreeNode();
         free(head);
-//        delete head;
     }
     head = tail = nullptr;
     _size = 0;
@@ -348,16 +225,13 @@ char *FreeList::removeNodeOfBlock(char *block) {
         return nullptr;
     }
     if (node->getBlock() == block) {
-//        std::cout << "Removed the head node with id = " << node->_id << std::endl;
         FreeNode *node = head;
         head = head->next;
-//        node = node->next;
         node->next = node->prev = nullptr;
         --_size;
         ret = node->getBlock();
         node->~FreeNode();
         free(node);
-//        delete node;
         return ret;
     }
 
@@ -365,7 +239,6 @@ char *FreeList::removeNodeOfBlock(char *block) {
         node = node->next;
     }
     if (node->getBlock() == block) {
-//        std::cout << "Removed the node with id = " << node->_id << std::endl;
         node->prev->next = node->next;
         if (node->next != nullptr) {
             node->next->prev = node->prev;
@@ -378,7 +251,6 @@ char *FreeList::removeNodeOfBlock(char *block) {
         ret = node->getBlock();
         node->~FreeNode();
         free(node);
-//        delete node;
         return ret;
     }
 }
@@ -447,13 +319,10 @@ void FreeList::addBlock(char *block, size_t size) {
                 tmp->prev = f;
                 f->prev->next = f;
             }
-
         }
-
     }
     ++_size;
 }
-
 
 
 int FreeList::searchBlockSize(char *block) {
@@ -468,8 +337,7 @@ int FreeList::searchBlockSize(char *block) {
     }
     if (node->getBlock() == block) {
         return node->getBlockSize();
-    }
-    else {
+    } else {
         return -1;
     }
 }

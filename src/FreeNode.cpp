@@ -11,29 +11,17 @@ FreeNode::FreeNode()
         : _id(id++) {}
 
 FreeNode::FreeNode(char *block, size_t size)
-        : _blockSize(size), _block(block), _id(id++), next(nullptr), prev(nullptr) {
-
-//    std::cout << "Created the node " << _id << " of the size " << size << " at address ";// << addr << std::endl;
-//    printf("%p", (void*)_block);
-//    std::cout << std::endl;
-}
+        : _blockSize(size), _block(block), _id(id++), next(nullptr), prev(nullptr) {}
 
 size_t FreeNode::getBlockSize() const {
     return _blockSize;
 }
 
-FreeNode::~FreeNode() {
-//    std::cout << "Deleted the node " << _id << " of the size " << getBlockSize() << std::endl;
-//    _block = nullptr;
-//      delete block;
-}
+FreeNode::~FreeNode() {}
 
 char *FreeNode::getBlock() {
     return _block;
 }
-
-
-
 
 
 std::ostream &operator<<(std::ostream &os, FreeNode &node) {
