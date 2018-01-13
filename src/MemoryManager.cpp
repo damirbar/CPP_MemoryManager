@@ -412,21 +412,6 @@ char *MemoryManager::getMemoryBlock(size_t size) {
             while (counters[i] * pow(2, i) > _poolSize - (!wasAllocated ? _currAlloc + size : _currAlloc)) {
 //                std::cout << "Popping a block of size " << pow(2, i) << std::endl;
 
-
-//                if (counters[i] * pow(2, i) == _poolSize - (!wasAllocated ? _currAlloc + size : _currAlloc)) {
-//
-//                    if (i == check) {
-//                        ret = map[i].allocNode();
-//                        allocated[i].addNode(ret);
-//
-//                        if (!wasAllocated) {
-//                            _currAlloc += size;
-//                            wasAllocated = true;
-//                        }
-//                    }
-//                    break;
-//                }
-
                 if (i == check) {
                     ret = map[i].allocNode();
                     allocated[i].addNode(ret);
@@ -435,9 +420,7 @@ char *MemoryManager::getMemoryBlock(size_t size) {
                         _currAlloc += size;
                         wasAllocated = true;
                     }
-//                    allocated[i].add(ret);
                 } else {
-//                    delete map[i].allocNode();
                     FreeNode *toDel = map[i].allocNode();
                     toDel->~FreeNode();
                     free(toDel);
@@ -450,8 +433,6 @@ char *MemoryManager::getMemoryBlock(size_t size) {
 
         }
 
-//        --counters[check];
-//        return map[check].allocNode();
         if (!ret) {
             std::cout << "Returning a nullptr. Not enough memory" << std::endl;
             return nullptr;
