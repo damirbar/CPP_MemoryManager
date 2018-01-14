@@ -12,7 +12,7 @@
 #include "FreeList.h"
 
 
-/** The custom memory manager.
+/** The custom memory manager ***Decorator*** --> Abstract.
  *  This class uses every other class of this project.
  *  The memory manager has a total of 22 FreeLists:
  *  -   11 lists of free memory blocks of 11 powers of 2:
@@ -35,7 +35,6 @@
  *  The manager has other fields:
  *  -   poolSize         - self explanatory.
  *  -   currAlloc        - The number of bytes allocated.
- *  -   valgrindFlag     - determines if the user wants a full output of memory leaks.
  *  -   counters[]       - an array which tells the manager how many nodes are in which list
  *      of the free memory.
  *  -   readyToGo        - determines if all fields were initialized correctly.
@@ -43,6 +42,7 @@
  */
 class MemoryManager {
 
+protected:
     FreeList *map;
     FreeList *allocated;
     MemPool &_mmpl;
@@ -74,9 +74,6 @@ public:
     //  Sets the size of the memory manager which actually sets the pool size.
     void setSize(size_t size);
 
-    //  Sets the valgrind flag.
-    void setValgrind(bool is);
-
     //  Sets the elaborated output flag.
     void setElaboratedOutput(bool is);
 
@@ -84,9 +81,8 @@ public:
     bool isReady();
 
     /*  Calls the dtor of the free lists and freeing their memory.
-     *  If the valgrind flag was set, a full output will be given.
      */
-    ~MemoryManager();
+    virtual ~MemoryManager() = 0;
 
     /*  Allocates a memory block of the given size.
      *  What it actually does:

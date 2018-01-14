@@ -1,46 +1,9 @@
 #include <iostream>
-#include "hdr/FreeList.h"
-#include "hdr/MemPool.h"
-#include "hdr/MemoryManager.h"
+#include "hdr/Point.h"
+#include "hdr/Operators.h"
 
 using namespace std;
 
-static MemoryManager manager;
-
-void *operator new(size_t size) {
-    if (manager.isReady()) {
-        puts("\t\t\t\t\t\t\tMemoryManager's new operator was called");
-        return manager.getMemoryBlock(size);
-    }
-
-    return malloc(size);
-}
-
-void operator delete(void *p) {
-    if (manager.isReady()) {
-        puts("\t\t\t\t\t\t\tMemoryManager's delete operator was called");
-        manager.searchSizeAndReturnMemory((char *) p);
-        return;
-    }
-    free(p);
-}
-
-void *operator new[](size_t size) {
-    if (manager.isReady()) {
-        puts("\t\t\t\t\t\t\tMemoryManager's new[] operator was called");
-        return manager.getMemoryBlock(size);
-    }
-    return malloc(size);
-}
-
-void operator delete[](void *p) {
-    if (manager.isReady()) {
-        puts("\t\t\t\t\t\t\tMemoryManager's delete[] operator was called");
-        manager.searchSizeAndReturnMemory((char *) p);
-        return;
-    }
-    free(p);
-}
 
 int main(int argc, char *argv[]) {
 
@@ -94,6 +57,7 @@ int main(int argc, char *argv[]) {
      */
     manager.setSize(size);
     manager.setValgrind(valgrind);
+    //manager.setElaboratedOutput(true);  //  Optional, for more output.
 
 
     /*  This method will print the current state of the heap. It will, at this
@@ -168,17 +132,16 @@ int main(int argc, char *argv[]) {
 
     /*  Total allocations:
      *  -   1 int (of size 4)
-     *  -   1 double (of size 8)
      *  -   3 shorts (of size 2)
-     *  -   2 chars (of size 1)
+     *  -   2 chars as an array (2 bytes total)
+     *  -   1 Point object (of size 16)
      */
     int *noDeallocateInt       = new int;
-    double *noDeallocateDouble = new double;
     short *noDeallocateShort1  = new short;
     short *noDeallocateShort2  = new short;
     short *noDeallocateShort3  = new short;
-    char *noDeallocateChar1    = new char;
-    char *noDeallocateChar2    = new char;
+    char *noDeallocateChar1    = new char[2];
+    Point *p = new Point();
 
 
     std::cout << "\n\n\n\n----------------Main function ended----------------\n\n\n\n" << std::endl;

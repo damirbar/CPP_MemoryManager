@@ -20,6 +20,7 @@
 class FreeList {
 
     friend class MemoryManager;
+    friend class MemoryManagerValgrind;
 
     FreeNode *head;
     FreeNode *tail;

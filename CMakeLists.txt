@@ -14,4 +14,4 @@ include_directories(/hdr)
 file(GLOB SRC_FILES src/*.cpp main.cpp)
 
 #  Generate executable.
-add_executable(cpp_ex3_v3 ${SRC_FILES} src/MemoryManager.cpp hdr/MemoryManager.h)
+add_executable(cpp_ex3_v3 ${SRC_FILES})

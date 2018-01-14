@@ -61,10 +61,6 @@ void MemoryManager::setSize(size_t size) {
     _readyToGo = true;
 }
 
-void MemoryManager::setValgrind(bool is) {
-    valgrindFlag = is;
-}
-
 
 int MemoryManager::whichPowerOfTwo(size_t n) {
     int counter = 0;
@@ -92,25 +88,9 @@ MemoryManager::~MemoryManager() {
     }
     free(map);
 
-    if (valgrindFlag) {
-
-        int bytesForgotten = 0;
-        int placesForgotten = 0;
-        for (int i = 0; i < 11; ++i) {
-            if (allocated[i].size() > 0) {
-                std::cout << "Lost " << allocated[i].size() << " blocks of size " << pow(2, i) << std::endl;
-                bytesForgotten += allocated[i].size() * pow(2, i);
-                placesForgotten += allocated[i].size();
-            }
-        }
-        if (bytesForgotten > 0) {
-            std::cout << "\t\t\t\tTotal: lost " << bytesForgotten << " bytes in " << placesForgotten << " places"
-                      << std::endl;
-        } else {
-            std::cout << "No memory leaks at all" << std::endl;
-        }
+    if (!allocated) {
+        return;
     }
-
     for (int i = 0; i < 11; ++i) {
         allocated[i].~FreeList();
     }
@@ -198,6 +178,11 @@ char *MemoryManager::getMemoryBlock(size_t size) {
 
     int check = whichPowerOfTwo(size);
     if (check != -1) {
+
+        if (map[check].size() == 0) {
+            std::cerr << "Not enough memory!" << std::endl;
+            return nullptr;
+        }
 
         int nextPow = (int) pow(2, ceil(log(size) / log(2)));
         for (int i = 0; i < 11; ++i) {
