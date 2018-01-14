@@ -118,13 +118,31 @@ public:
      */
     void returnMemoryBlock(char *f, size_t size);
 
-    //  Searches for the size of the memory block given and calls 
+    //  Searches for the size of the memory block given and calls returnMemoryBlock(...).
     void searchSizeAndReturnMemory(char *block);
 
+    /*  Prints the current state of the free memory on the custom heap.
+     *  It shows the free blocks of memory of sizes 2^i where i >= 0.
+     */
     void printCurrMemoryState();
 
+    /*  Prints the current state of the allocated memory which was allocated
+     *  from the custom heap. It shows the used blocks of memory of sizes 2^i
+     *  where i >= 0.
+     */
     void printCurrAllocatedMemoryState();
 
+    /*  The initialization method of the memory manager.
+     *  This method fills the free lists by amount of blocks which corresponds
+     *  to the size given to the manager. e.g:
+     *  A size of 16 was given to a new memory manager. The init does:
+     *  -   Add 16 new FreeNodes of 1 byte to map[0].
+     *  -   Add 8 new FreeNodes of 2 bytes to map[1].
+     *  -   Add 4 new FreeNodes of 4 bytes to map[2].
+     *  -   Add 2 new FreeNodes of 8 bytes to map[3].
+     *  -   Add 1 new FreeNodes of 16 bytes to map[4].
+     *  Where map[i] stands for blocks of size 2^i
+     */
     void init();
 };
 

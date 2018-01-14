@@ -5,7 +5,6 @@
 
 using namespace std;
 
-//static MemoryManager manager(15, true);
 static MemoryManager manager;
 
 void *operator new(size_t size) {
@@ -18,7 +17,6 @@ void *operator new(size_t size) {
 }
 
 void operator delete(void *p) {
-//    manager.returnMemoryBlock(static_cast<char *>(p), 8);
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's delete operator was called");
         manager.searchSizeAndReturnMemory((char *) p);
@@ -59,7 +57,6 @@ int main(int argc, char *argv[]) {
     }
     if (argc == 3) {
         char *argOne = argv[1];
-//        string argOneString = argOne;
         if ((string) argOne == "-s") {
             size = static_cast<size_t>(stoll((string) argv[2]));
         } else {
