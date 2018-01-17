@@ -13,18 +13,18 @@ MemoryManager::MemoryManager(size_t size, bool valgrind)
           _readyToGo(true),
           _elaboratedOutput(false) {
 
-    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * 11);
-    if (!mapMem) {
-        std::cerr << "FreeList map was not created" << std::endl;
-        return;
-    }
-    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * 11);
-    if (!allocatedMem) {
-        std::cerr << "FreeList allocated was not created" << std::endl;
-    }
-
-    map = new(mapMem) FreeList[11];
-    allocated = new(allocatedMem) FreeList[11];
+//    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+//    if (!mapMem) {
+//        std::cerr << "FreeList map was not created" << std::endl;
+//        return;
+//    }
+//    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+//    if (!allocatedMem) {
+//        std::cerr << "FreeList allocated was not created" << std::endl;
+//    }
+//
+//    map = new(mapMem) FreeList[MAX_POW_OF_TWO];
+//    allocated = new(allocatedMem) FreeList[MAX_POW_OF_TWO];
 
     _mmpl.setPool(size);
     init();
@@ -43,18 +43,18 @@ void MemoryManager::setSize(size_t size) {
     _currAlloc = 0;
     valgrindFlag = false;
 
-    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * 11);
-    if (!mapMem) {
-        std::cerr << "FreeList map was not created" << std::endl;
-        return;
-    }
-    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * 11);
-    if (!allocatedMem) {
-        std::cerr << "FreeList allocated was not created" << std::endl;
-    }
-
-    map = new(mapMem) FreeList[11];
-    allocated = new(allocatedMem) FreeList[11];
+//    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+//    if (!mapMem) {
+//        std::cerr << "FreeList map was not created" << std::endl;
+//        return;
+//    }
+//    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+//    if (!allocatedMem) {
+//        std::cerr << "FreeList allocated was not created" << std::endl;
+//    }
+//
+//    map = new(mapMem) FreeList[MAX_POW_OF_TWO];
+//    allocated = new(allocatedMem) FreeList[MAX_POW_OF_TWO];
 
     _mmpl.setPool(size);
     init();
@@ -80,26 +80,26 @@ int MemoryManager::whichPowerOfTwo(size_t n) {
 
 MemoryManager::~MemoryManager() {
 
-    if (!map) {
-        return;
-    }
-    for (int i = 0; i < 11; ++i) {
-        map[i].~FreeList();
-    }
-    free(map);
-
-    if (!allocated) {
-        return;
-    }
-    for (int i = 0; i < 11; ++i) {
-        allocated[i].~FreeList();
-    }
-    free(allocated);
+//    if (!map) {
+//        return;
+//    }
+//    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
+//        map[i].~FreeList();
+//    }
+//    free(map);
+//
+//    if (!allocated) {
+//        return;
+//    }
+//    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
+//        allocated[i].~FreeList();
+//    }
+//    free(allocated);
 }
 
 void MemoryManager::printCurrMemoryState() {
 
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
 
         FreeNode *it = map[i].getHead();
 
@@ -125,7 +125,7 @@ void MemoryManager::init() {
     char *pool = _mmpl.getPool();
     size_t size = _poolSize;
 
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
         size_t counter = (size_t) pow(2, i);
 
         counters[i] = 0;
@@ -146,7 +146,7 @@ void MemoryManager::init() {
 }
 
 void MemoryManager::printCurrAllocatedMemoryState() {
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
 
         FreeNode *it = allocated[i].getHead();
 
@@ -185,7 +185,7 @@ char *MemoryManager::getMemoryBlock(size_t size) {
         }
 
         int nextPow = (int) pow(2, ceil(log(size) / log(2)));
-        for (int i = 0; i < 11; ++i) {
+        for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
 
             while (counters[i] * pow(2, i) > _poolSize - (!wasAllocated ? _currAlloc + size : _currAlloc)) {
                 if (_elaboratedOutput) {
@@ -243,7 +243,7 @@ void MemoryManager::returnMemoryBlock(char *f, size_t size) {
         _currAlloc -= size;
         bool returned = false;
 
-        for (int i = 0; i < 11; ++i) {
+        for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
             size_t counter = (size_t) pow(2, i);
 
             if (counter <= _poolSize) {
@@ -309,7 +309,7 @@ void MemoryManager::returnMemoryBlock(char *f, size_t size) {
 }
 
 void MemoryManager::searchSizeAndReturnMemory(char *block) {
-    for (int i = 0; i < 11; ++i) {
+    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
         int size = allocated[i].searchBlockSize(block);
         if (size != -1) {
             if (_elaboratedOutput) {

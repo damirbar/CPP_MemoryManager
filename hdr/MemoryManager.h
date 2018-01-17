@@ -11,6 +11,7 @@
 #include "MemPool.h"
 #include "FreeList.h"
 
+#define MAX_POW_OF_TWO 11
 
 /** The custom memory manager ***Decorator*** --> Abstract.
  *  This class uses every other class of this project.
@@ -43,15 +44,15 @@
 class MemoryManager {
 
 protected:
-    FreeList *map;
-    FreeList *allocated;
+    FreeList map[MAX_POW_OF_TWO];
+    FreeList allocated[MAX_POW_OF_TWO];
     MemPool &_mmpl;
     size_t _poolSize;
     size_t _currAlloc;
 
     bool valgrindFlag;
 
-    int counters[11];
+    int counters[MAX_POW_OF_TWO];
 
     bool _readyToGo;
 
