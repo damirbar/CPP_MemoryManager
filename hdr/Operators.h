@@ -18,7 +18,7 @@ static MemoryManagerValgrind manager;
  *  the block will be a pointer to the custom heap (memory pool). Else,
  *  the memory will be allocated from the original heap.
  */
-void *operator new(size_t size) {
+void *operator new(size_t size) throw(std::bad_alloc) {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's new operator was called");
         void *ret = manager.getMemoryBlock(size);
@@ -40,7 +40,7 @@ void *operator new(size_t size) {
  *  the custom heap (memory pool). Else, the memory will be deallocated
  *  to the original heap.
  */
-void operator delete(void *p) {
+void operator delete(void *p) throw() {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's delete operator was called");
         manager.searchSizeAndReturnMemory((char *) p);
@@ -58,7 +58,7 @@ void operator delete(void *p) {
  *  the block will be a pointer to the custom heap (memory pool). Else,
  *  the memory will be allocated from the original heap.
  */
-void *operator new[](size_t size) {
+void *operator new[](size_t size) throw(std::bad_alloc) {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's new[] operator was called");
         return manager.getMemoryBlock(size);
@@ -75,7 +75,7 @@ void *operator new[](size_t size) {
  *  the custom heap (memory pool). Else, the memory will be deallocated
  *  to the original heap.
  */
-void operator delete[](void *p) {
+void operator delete[](void *p) throw() {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's delete[] operator was called");
         manager.searchSizeAndReturnMemory((char *) p);
