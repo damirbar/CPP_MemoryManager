@@ -13,18 +13,18 @@ MemoryManager::MemoryManager(size_t size, bool valgrind)
           _readyToGo(true),
           _elaboratedOutput(false) {
 
-//    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
-//    if (!mapMem) {
-//        std::cerr << "FreeList map was not created" << std::endl;
-//        return;
-//    }
-//    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
-//    if (!allocatedMem) {
-//        std::cerr << "FreeList allocated was not created" << std::endl;
-//    }
-//
-//    map = new(mapMem) FreeList[MAX_POW_OF_TWO];
-//    allocated = new(allocatedMem) FreeList[MAX_POW_OF_TWO];
+    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+    if (!mapMem) {
+        std::cerr << "FreeList map was not created" << std::endl;
+        return;
+    }
+    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+    if (!allocatedMem) {
+        std::cerr << "FreeList allocated was not created" << std::endl;
+    }
+
+    map = new(mapMem) FreeList[MAX_POW_OF_TWO];
+    allocated = new(allocatedMem) FreeList[MAX_POW_OF_TWO];
 
     _mmpl.setPool(size);
     init();
@@ -43,18 +43,18 @@ void MemoryManager::setSize(size_t size) {
     _currAlloc = 0;
     valgrindFlag = false;
 
-//    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
-//    if (!mapMem) {
-//        std::cerr << "FreeList map was not created" << std::endl;
-//        return;
-//    }
-//    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
-//    if (!allocatedMem) {
-//        std::cerr << "FreeList allocated was not created" << std::endl;
-//    }
-//
-//    map = new(mapMem) FreeList[MAX_POW_OF_TWO];
-//    allocated = new(allocatedMem) FreeList[MAX_POW_OF_TWO];
+    void *mapMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+    if (!mapMem) {
+        std::cerr << "FreeList map was not created" << std::endl;
+        return;
+    }
+    void *allocatedMem = (FreeList *) malloc(sizeof(FreeList) * MAX_POW_OF_TWO);
+    if (!allocatedMem) {
+        std::cerr << "FreeList allocated was not created" << std::endl;
+    }
+
+    map = new(mapMem) FreeList[MAX_POW_OF_TWO];
+    allocated = new(allocatedMem) FreeList[MAX_POW_OF_TWO];
 
     _mmpl.setPool(size);
     init();
@@ -80,21 +80,21 @@ int MemoryManager::whichPowerOfTwo(size_t n) {
 
 MemoryManager::~MemoryManager() {
 
-//    if (!map) {
-//        return;
-//    }
-//    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
-//        map[i].~FreeList();
-//    }
-//    free(map);
-//
-//    if (!allocated) {
-//        return;
-//    }
-//    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
-//        allocated[i].~FreeList();
-//    }
-//    free(allocated);
+    if (!map) {
+        return;
+    }
+    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
+        map[i].~FreeList();
+    }
+    free(map);
+
+    if (!allocated) {
+        return;
+    }
+    for (int i = 0; i < MAX_POW_OF_TWO; ++i) {
+        allocated[i].~FreeList();
+    }
+    free(allocated);
 }
 
 void MemoryManager::printCurrMemoryState() {

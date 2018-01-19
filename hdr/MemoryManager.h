@@ -44,8 +44,8 @@
 class MemoryManager {
 
 protected:
-    FreeList map[MAX_POW_OF_TWO];
-    FreeList allocated[MAX_POW_OF_TWO];
+    FreeList *map;
+    FreeList *allocated;
     MemPool &_mmpl;
     size_t _poolSize;
     size_t _currAlloc;
@@ -64,6 +64,7 @@ protected:
      *  Else: returns the correct power.
      */
     int whichPowerOfTwo(size_t n);
+
 public:
 
     //  Ctor. Receives pool size and a valgrind flag.
