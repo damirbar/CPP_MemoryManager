@@ -10,7 +10,14 @@
 
 static MemoryManagerValgrind manager;
 
-
+/*  Overloaded new operator.
+ *  Parameter: size of the block to return.
+ *  Returns a block of memory.
+ *
+ *  This operator checks if the MemoryManager is fully initialized. If so,
+ *  the block will be a pointer to the custom heap (memory pool). Else,
+ *  the memory will be allocated from the original heap.
+ */
 void *operator new(size_t size) {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's new operator was called");
@@ -25,6 +32,14 @@ void *operator new(size_t size) {
     return malloc(size);
 }
 
+/*  Overloaded delete operator.
+ *  Parameter: The block to return.
+ *
+ *  This operator checks if the MemoryManager is fully initialized. If so,
+ *  the manager will look for its size and then will return the memory to
+ *  the custom heap (memory pool). Else, the memory will be deallocated
+ *  to the original heap.
+ */
 void operator delete(void *p) {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's delete operator was called");
@@ -34,6 +49,15 @@ void operator delete(void *p) {
     free(p);
 }
 
+
+/*  Overloaded new[] operator.
+ *  Parameter: size of the block to return.
+ *  Returns a block of memory.
+ *
+ *  This operator checks if the MemoryManager is fully initialized. If so,
+ *  the block will be a pointer to the custom heap (memory pool). Else,
+ *  the memory will be allocated from the original heap.
+ */
 void *operator new[](size_t size) {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's new[] operator was called");
@@ -42,6 +66,15 @@ void *operator new[](size_t size) {
     return malloc(size);
 }
 
+
+/*  Overloaded delete[] operator.
+ *  Parameter: The block to return.
+ *
+ *  This operator checks if the MemoryManager is fully initialized. If so,
+ *  the manager will look for its size and then will return the memory to
+ *  the custom heap (memory pool). Else, the memory will be deallocated
+ *  to the original heap.
+ */
 void operator delete[](void *p) {
     if (manager.isReady()) {
         puts("\t\t\t\t\t\t\tMemoryManager's delete[] operator was called");
